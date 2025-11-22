@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Monitoring on Fabian Clemenz</title>
+    <link>//localhost:1313/categories/monitoring/</link>
+    <description>Recent content in Monitoring on Fabian Clemenz</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 19 Nov 2025 08:55:34 +0100</lastBuildDate>
+    <atom:link href="//localhost:1313/categories/monitoring/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DigitalOcean App Platform X Datadog</title>
+      <link>//localhost:1313/posts/digitalocean-app-platform-x-datadog/</link>
+      <pubDate>Wed, 19 Nov 2025 08:55:34 +0100</pubDate>
+      <guid>//localhost:1313/posts/digitalocean-app-platform-x-datadog/</guid>
+      <description>&lt;p&gt;This article was first published on our company website. &lt;a href=&#34;https://devsuit.de/ueber-uns/aktuelles/digitalocean-app-platform-x-datadog&#34;  class=&#34;external-link&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;https://devsuit.de/ueber-uns/aktuelles/digitalocean-app-platform-x-datadog&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;In this article I will show how to connect services inside the DigitalOcean App Platform with Datadog. By the time of writing (07.11.2025) there is no direct integration except for logging. But as soon as you need APM or Error Tracking, you have no choice but to build your own solution.&lt;/p&gt;&#xA;&lt;h2 id=&#34;prerequisites&#34;&gt;&#xA;  Prerequisites&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#prerequisites&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;The following components are needed:&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

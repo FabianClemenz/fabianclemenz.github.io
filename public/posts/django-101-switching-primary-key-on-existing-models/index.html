@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  Django 101: Switching the primary key on existing models · Fabian Clemenz
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Fabian Clemenz">
+<meta name="description" content="This Django 101 takes you through the steps of switching from one primary key to another on existing models, without harming your data">
+<meta name="keywords" content="blog,developer,personal">
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Django 101: Switching the primary key on existing models">
+  <meta name="twitter:description" content="This Django 101 takes you through the steps of switching from one primary key to another on existing models, without harming your data">
+
+<meta property="og:url" content="//localhost:1313/posts/django-101-switching-primary-key-on-existing-models/">
+  <meta property="og:site_name" content="Fabian Clemenz">
+  <meta property="og:title" content="Django 101: Switching the primary key on existing models">
+  <meta property="og:description" content="This Django 101 takes you through the steps of switching from one primary key to another on existing models, without harming your data">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-03-09T13:31:46+01:00">
+    <meta property="article:modified_time" content="2023-03-09T13:31:46+01:00">
+    <meta property="article:tag" content="Django">
+    <meta property="article:tag" content="Database">
+    <meta property="article:tag" content="Primary Key Switch">
+    <meta property="article:tag" content="Uuid">
+
+
+
+
+<link rel="canonical" href="//localhost:1313/posts/django-101-switching-primary-key-on-existing-models/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="//localhost:1313/">
+      Fabian Clemenz
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="//localhost:1313/posts/django-101-switching-primary-key-on-existing-models/">
+              Django 101: Switching the primary key on existing models
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2023-03-09T13:31:46&#43;01:00">
+                March 9, 2023
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              7-minute read
+            </span>
+          </div>
+          <div class="authors">
+  <i class="fa-solid fa-user" aria-hidden="true"></i>
+    <a href="/authors/fabian-clemenz/">Fabian Clemenz</a></div>
+
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/101/">101</a>
+      <span class="separator">•</span>
+    <a href="/categories/programming/">Programming</a></div>
+
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/django/">Django</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/database/">Database</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/primary-key-switch/">Primary Key Switch</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/uuid/">Uuid</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <h4 id="or-living-on-the-edge-of-data-loss">
+  <em>or: living on the edge of data loss</em>
+  <a class="heading-link" href="#or-living-on-the-edge-of-data-loss">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<p>A while ago, we got the task to switch from a 22 long char field to our internal uuid as primary key. The 22-character long id was the primary key from our source system. The idea was to decouple both systems, so we can create virtual entries, without providing a random char, which could have led to errors in the future. Our database table contained over 3.4 million entries at this time. Linked to round about 16 other tables in foreign key and many to many relations.</p>
+<p>After research, I used the instructions found in this <a href="https://stackoverflow.com/questions/48200026/how-to-make-uuid-field-default-when-theres-already-id-field/48235821#48235821"  class="external-link" target="_blank" rel="noopener">stackoverflow answer</a>, which I updated afterwards to fix what I noticed.</p>
+<h2 id="prerequisites">
+  Prerequisites
+  <a class="heading-link" href="#prerequisites">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<h3 id="caution">
+  Caution
+  <a class="heading-link" href="#caution">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Before applying these steps on your production database - <strong>ALWAYS</strong> test it with test data <strong>AND</strong> backup your database. And at best - test it several times. That saved me a lot of work, because I needed three iterations for all migrations to work as expected.</p>
+<h3 id="sample-code">
+  Sample code
+  <a class="heading-link" href="#sample-code">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>I created a sample django project to show the single steps. It can be found in my <a href="https://github.com/FabianClemenz/primary-key-switch"  class="external-link" target="_blank" rel="noopener">Github repository</a>.</p>
+<p>The <code>0000_base_db_dump_before_pk_switch.json</code> in the fixtures folder contains a base dataset on which we will perform our operations. In <code>0001_db_dump_after_pk_switch.json</code> you can find the end result.</p>
+<p>I will reference the migrations located in <a href="https://github.com/FabianClemenz/primary-key-switch/tree/draft/initial/primary_key_switch/test_app/migrations"  class="external-link" target="_blank" rel="noopener">primary_key_switch / test_app / migrations</a> while I explain the single steps.</p>
+<h3 id="basic-models">
+  Basic models
+  <a class="heading-link" href="#basic-models">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>In django, without providing a specific primary key, it will automatically generate an integer based primary key.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    name <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>CharField(max_length<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">200</span>, verbose_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;Name&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test Model&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestForeignKeyModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    test_model <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ForeignKey(TestModel, on_delete<span style="color:#ff7b72;font-weight:bold">=</span>models<span style="color:#ff7b72;font-weight:bold">.</span>CASCADE, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_model&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test ForeignKey Model&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestManyToManyModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    test_models <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ManyToManyField(TestModel, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_manytomany_models&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>: 
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test ManyToMany Model&#39;</span>
+</span></span></code></pre></div><h2 id="step-by-step">
+  Step by step
+  <a class="heading-link" href="#step-by-step">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<h3 id="step-1-add-an-uuid-field">
+  Step 1: add an uuid field
+  <a class="heading-link" href="#step-1-add-an-uuid-field">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>The first step is - who would have known - adding the uuid field to our wanted model (<code>TestModel</code>) but accepting null values here (<code>0002_testmodel_uuid.py</code>). After that fill unique uuids (<code>0003_set_unique_uuids.py</code>) and reset the field to be unique and not nullable (<code>0004_set_unique_true_on_uuid.py</code>).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    uuid <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>UUIDField(default<span style="color:#ff7b72;font-weight:bold">=</span>uuid<span style="color:#ff7b72;font-weight:bold">.</span>uuid4, unique<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>    name <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>CharField(max_length<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">200</span>, verbose_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;Name&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test Model&#39;</span>
+</span></span></code></pre></div><h3 id="step-2-add-new-foreign-keys-to-other-models">
+  Step 2: add new foreign keys to other models
+  <a class="heading-link" href="#step-2-add-new-foreign-keys-to-other-models">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Now we need to link our <code>TestModel</code> again with the other models through a foreign key relation, but this time through the uuid field. This field must be nullable in the first step (<code>0005_testforeighkeymodel_test_model_uuid.py</code>), so we can link the correct instance by hand (<code>0006_uuid_fk_test_foreign_key_model.py</code>). I would recommend using a _uuid suffix to distinguish between the fields.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestForeignKeyModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    test_model <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ForeignKey(TestModel, on_delete<span style="color:#ff7b72;font-weight:bold">=</span>models<span style="color:#ff7b72;font-weight:bold">.</span>CASCADE, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_model&#39;</span>)
+</span></span><span style="display:flex;"><span>    test_model_uuid <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ForeignKey(TestModel, null<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>, to_field<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;uuid&#39;</span>, on_delete<span style="color:#ff7b72;font-weight:bold">=</span>models<span style="color:#ff7b72;font-weight:bold">.</span>CASCADE, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_model_uuid&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test ForeignKey Model&#39;</span>
+</span></span></code></pre></div><h3 id="step-3-add-new-model-for-many-to-many-relation">
+  Step 3: add new model for many to many relation
+  <a class="heading-link" href="#step-3-add-new-model-for-many-to-many-relation">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Changing many to many relations differs from changing foreign key relations. We need to create a temporary model which will be used as a table for the new relation (<code>0007_testthroughmodel_and_more.py</code>). This is called a through model or a through table. And as seen before, copy the wanted data to the new table (<code>0008_uuid_m2m_testmanytomanymodel.py</code>).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestThroughModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    test_many_to_many_model <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ForeignKey(TestManyToManyModel, null<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>, on_delete<span style="color:#ff7b72;font-weight:bold">=</span>models<span style="color:#ff7b72;font-weight:bold">.</span>CASCADE)
+</span></span><span style="display:flex;"><span>    test_model <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ForeignKey(TestModel, null<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>, to_field<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;uuid&#39;</span>, on_delete<span style="color:#ff7b72;font-weight:bold">=</span>models<span style="color:#ff7b72;font-weight:bold">.</span>CASCADE)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test Through Model&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestManyToManyModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    test_models <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ManyToManyField(TestModel, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_manytomany_models&#39;</span>)
+</span></span><span style="display:flex;"><span>    test_models_uuid <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ManyToManyField(TestModel, through<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;TestThroughModel&#39;</span>, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_manytomany_models_uuid&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test ManyToMany Model&#39;</span>
+</span></span></code></pre></div><h3 id="step-4-delete-old-connections">
+  Step 4: delete old connections
+  <a class="heading-link" href="#step-4-delete-old-connections">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Now it’s time to remove the old connections between our models. We just remove the many to many and foreign key fields without the _uuid suffix. Also we don’t delete our <code>TestThroughModel</code> yet (<code>0009_remove_test_foreignkeymodel_test_model_and_more.py</code>).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    uuid <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>UUIDField(default<span style="color:#ff7b72;font-weight:bold">=</span>uuid<span style="color:#ff7b72;font-weight:bold">.</span>uuid4, unique<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>    name <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>CharField(max_length<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">200</span>, verbose_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;Name&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test Model&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestForeignKeyModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    test_model_uuid <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ForeignKey(TestModel, null<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>, to_field<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;uuid&#39;</span>, on_delete<span style="color:#ff7b72;font-weight:bold">=</span>models<span style="color:#ff7b72;font-weight:bold">.</span>CASCADE, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_model_uuid&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test ForeignKey Model’</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestThroughModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    test_many_to_many_model <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ForeignKey(TestManyToManyModel, null<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>, on_delete<span style="color:#ff7b72;font-weight:bold">=</span>models<span style="color:#ff7b72;font-weight:bold">.</span>CASCADE)
+</span></span><span style="display:flex;"><span>    test_model <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ForeignKey(TestModel, null<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>, to_field<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;uuid&#39;</span>, on_delete<span style="color:#ff7b72;font-weight:bold">=</span>models<span style="color:#ff7b72;font-weight:bold">.</span>CASCADE)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test Through Model&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestManyToManyModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    test_models_uuid <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ManyToManyField(TestModel, through<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;TestThroughModel&#39;</span>, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_manytomany_models_uuid&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test ManyToMany Model&#39;</span>
+</span></span></code></pre></div><h3 id="step-5-delete-the-db-constraints-on-the-new-foreign-key-fields">
+  Step 5: delete the db constraints on the new foreign key fields
+  <a class="heading-link" href="#step-5-delete-the-db-constraints-on-the-new-foreign-key-fields">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>This is a crucial step, because django will connect through the unique constraints of the uuid which will be dropped, after we change our primary key to the new uuid field (<code>0010_alter_testforeignkeymodel_test_model_uuid_and_more.py</code>).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestForeignKeyModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    test_model__uuid <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ForeignKey(TestModel, db_constraint<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">False</span>, null<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>, to_field<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;uuid&#39;</span>, on_delete<span style="color:#ff7b72;font-weight:bold">=</span>models<span style="color:#ff7b72;font-weight:bold">.</span>CASCADE, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_model_uuid&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test ForeignKey Model&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestThroughModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    test_many_to_many_model <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ForeignKey(TestManyToManyModel, null<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>, on_delete<span style="color:#ff7b72;font-weight:bold">=</span>models<span style="color:#ff7b72;font-weight:bold">.</span>CASCADE)
+</span></span><span style="display:flex;"><span>    test_model <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ForeignKey(TestModel, db_constraint<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">False</span>, null<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>, to_field<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;uuid&#39;</span>, on_delete<span style="color:#ff7b72;font-weight:bold">=</span>models<span style="color:#ff7b72;font-weight:bold">.</span>CASCADE)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test Through Model&#39;</span>
+</span></span></code></pre></div><h3 id="step-6-set-new-primary-key-field-on-testmodel">
+  Step 6: set new primary key field on TestModel
+  <a class="heading-link" href="#step-6-set-new-primary-key-field-on-testmodel">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Now it’s time to set our uuid field as the primary key. We can also remove the to_field declarative in our foreign key relations (<code>0011_remove_testmodel_id_and_more.py</code>).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    uuid <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>UUIDField(primary_key<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>, default<span style="color:#ff7b72;font-weight:bold">=</span>uuid<span style="color:#ff7b72;font-weight:bold">.</span>uuid4, unique<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>    name <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>CharField(max_length<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">200</span>, verbose_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;Name&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test Model&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestForeignKeyModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    test_model_uuid <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ForeignKey(TestModel, db_constraint<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">False</span>, null<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>, on_delete<span style="color:#ff7b72;font-weight:bold">=</span>models<span style="color:#ff7b72;font-weight:bold">.</span>CASCADE, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_model_uuid&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test ForeignKey Model&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestThroughModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    test_many_to_many_model <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ForeignKey(TestManyToManyModel, null<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>, on_delete<span style="color:#ff7b72;font-weight:bold">=</span>models<span style="color:#ff7b72;font-weight:bold">.</span>CASCADE)
+</span></span><span style="display:flex;"><span>    test_model <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ForeignKey(TestModel, db_constraint<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">False</span>, null<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>, on_delete<span style="color:#ff7b72;font-weight:bold">=</span>models<span style="color:#ff7b72;font-weight:bold">.</span>CASCADE)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test Through Model&#39;</span>
+</span></span></code></pre></div><h3 id="step-7-rename-fields-and-remove-_uuid-suffix">
+  Step 7: rename fields and remove _uuid suffix
+  <a class="heading-link" href="#step-7-rename-fields-and-remove-_uuid-suffix">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>We rename the fields and remove the _uuid suffix, so our old code will work as before (<code>0012_rename_test_model_uuid_testforeignkeymoel_test_model_and_more.py</code>). It is crucial here to be sure that django generates <strong>rename migrations</strong> instead of deleting the old field and adding a new one. This will delete your data! So check the generated migrations before applying them.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestForeignKeyModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    test_model <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ForeignKey(TestModel, db_constraint<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">False</span>, null<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>, on_delete<span style="color:#ff7b72;font-weight:bold">=</span>models<span style="color:#ff7b72;font-weight:bold">.</span>CASCADE, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_model_uuid&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test ForeignKey Model&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestManyToManyModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    test_models <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ManyToManyField(TestModel, through<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;TestThroughModel&#39;</span>, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_manytomany_models_uuid&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test ManyToMany Model&#39;</span>
+</span></span></code></pre></div><h3 id="step-8-remove-unnecessary-options-and-change-related-name">
+  Step 8: remove unnecessary options and change related name
+  <a class="heading-link" href="#step-8-remove-unnecessary-options-and-change-related-name">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>This step should not be done with the previous step, to be sure that django only renames the fields. We will now change the related names and remove other options such as <code>db_constraint</code> (<code>0013_alter_test_foreignkeymodel_test_model_and_more.py</code>).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestForeignKeyModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    test_model_uuid <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ForeignKey(TestModel, on_delete<span style="color:#ff7b72;font-weight:bold">=</span>models<span style="color:#ff7b72;font-weight:bold">.</span>CASCADE, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_model&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test ForeignKey Model&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestThroughModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    test_many_to_many_model <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ForeignKey(TestManyToManyModel, on_delete<span style="color:#ff7b72;font-weight:bold">=</span>models<span style="color:#ff7b72;font-weight:bold">.</span>CASCADE)
+</span></span><span style="display:flex;"><span>    test_model <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ForeignKey(TestModelon_delete<span style="color:#ff7b72;font-weight:bold">=</span>models<span style="color:#ff7b72;font-weight:bold">.</span>CASCADE)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test Through Model&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestManyToManyModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    test_models <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ManyToManyField(TestModel, through<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;TestThroughModel&#39;</span>, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_manytomany_models&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test ManyToMany Model&#39;</span>
+</span></span></code></pre></div><p>And that&rsquo;s it. We changed the primary key from one field to another field. This can be done with fields other than uuid and the automatic id field in django.</p>
+<hr>
+<h2 id="miscellaneous">
+  Miscellaneous
+  <a class="heading-link" href="#miscellaneous">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>If you don’t want to use a through model you need to do the following 5 extra steps. These steps could be included in the migrations before, but the goal here was to explicitly show the needed steps and explain them with their pitfalls.</p>
+<h3 id="extra-step-1-add-the-old-many-to-many-field">
+  Extra step 1: add the “old” many to many field
+  <a class="heading-link" href="#extra-step-1-add-the-old-many-to-many-field">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>We need to add the <strong>&ldquo;old&rdquo;</strong> many to many field, so we can copy the data back (<code>0014_testmanytomanymodel_test_models_old.py</code>).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestManyToManyModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    test_models <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ManyToManyField(TestModel, through<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;TestThroughModel&#39;</span>, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_manytomany_models&#39;</span>)
+</span></span><span style="display:flex;"><span>      test_models_old <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ManyToManyField(TestModel, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_manytomany_models_old&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test ManyToMany Model&#39;</span>
+</span></span></code></pre></div><h3 id="extra-step-2-copy-the-values---again">
+  Extra step 2: copy the values - again
+  <a class="heading-link" href="#extra-step-2-copy-the-values---again">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Now - <em>again</em> - we copy the values from one M2M to another M2M (<code>0015.copy_m2m.py</code>).</p>
+<h3 id="extra-step-3-delete-the-through-model-and-many-to-many-field">
+  Extra step 3: delete the through model and many to many field
+  <a class="heading-link" href="#extra-step-3-delete-the-through-model-and-many-to-many-field">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>We then delete the <code>TestThroughModel</code> and the related M2M field (<code>0016_remove_testmanytomanymodel_test_models_and_more.py</code>).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestManyToManyModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>      test_models_old <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ManyToManyField(TestModel, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_manytomany_models_old&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test ManyToMany Model&#39;</span>
+</span></span></code></pre></div><h3 id="extra-step-4-rename-the-many-to-many-field">
+  Extra step 4: rename the many to many field
+  <a class="heading-link" href="#extra-step-4-rename-the-many-to-many-field">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Now - <em>as before</em> - rename the many to many field. And - <em>again</em> - be careful, that django only generates a rename migration (<code>0017_rename_test_models_old_testmanytomanymodel_test_models.py</code>).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestManyToManyModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>      test_models <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ManyToManyField(TestModel, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_manytomany_models_old&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test ManyToMany Model&#39;</span>
+</span></span></code></pre></div><h3 id="extra-step-5-change-back-related_name">
+  Extra step 5: change back related_name
+  <a class="heading-link" href="#extra-step-5-change-back-related_name">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Last but not least - change back the <code>related_name</code> (<code>0018_alter_testmanytomanymodel_test_models.py</code>). Now we have the same structure as in the beginning, but with a uuid as primary key.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestManyToManyModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>      test_models <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ManyToManyField(TestModel, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_manytomany_models&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test ManyToMany Model&#39;</span>
+</span></span></code></pre></div><h2 id="code-after-all-our-changes">
+  Code after all our changes
+  <a class="heading-link" href="#code-after-all-our-changes">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    uuid <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>UUIDField(primary_key<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>, default<span style="color:#ff7b72;font-weight:bold">=</span>uuid<span style="color:#ff7b72;font-weight:bold">.</span>uuid4, unique<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>    name <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>CharField(max_length<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">200</span>, verbose_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;Name&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test Model&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestForeignKeyModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    test_model <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ForeignKey(TestModel, on_delete<span style="color:#ff7b72;font-weight:bold">=</span>models<span style="color:#ff7b72;font-weight:bold">.</span>CASCADE, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_model&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>:
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test ForeignKey Model&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestManyToManyModel</span>(models<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    test_models <span style="color:#ff7b72;font-weight:bold">=</span> models<span style="color:#ff7b72;font-weight:bold">.</span>ManyToManyField(TestModel, related_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;test_manytomany_models&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Meta</span>: 
+</span></span><span style="display:flex;"><span>        verbose_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Test ManyToMany Model&#39;</span>
+</span></span></code></pre></div><h2 id="conclusion">
+  Conclusion
+  <a class="heading-link" href="#conclusion">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>It can be really tricky changing primary key on grown databases but with a good plan, stackoverflow and a lot of trial and error on test data, you can create migrations without harming your production environment.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+<section class="see-also">
+  
+    
+    
+    
+  
+</section>
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2023 -
+    
+    2025
+     Fabian Clemenz 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+</html>

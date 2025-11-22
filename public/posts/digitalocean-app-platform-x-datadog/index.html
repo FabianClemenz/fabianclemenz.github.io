@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  DigitalOcean App Platform X Datadog · Fabian Clemenz
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Fabian Clemenz">
+<meta name="description" content="How to get Monitoring up and running">
+<meta name="keywords" content="blog,developer,personal">
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="DigitalOcean App Platform X Datadog">
+  <meta name="twitter:description" content="How to get Monitoring up and running">
+
+<meta property="og:url" content="//localhost:1313/posts/digitalocean-app-platform-x-datadog/">
+  <meta property="og:site_name" content="Fabian Clemenz">
+  <meta property="og:title" content="DigitalOcean App Platform X Datadog">
+  <meta property="og:description" content="How to get Monitoring up and running">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-11-19T08:55:34+01:00">
+    <meta property="article:modified_time" content="2025-11-19T08:55:34+01:00">
+    <meta property="article:tag" content="Digitalocean">
+    <meta property="article:tag" content="Datadog">
+    <meta property="article:tag" content="Monitoring">
+    <meta property="article:tag" content="Server">
+    <meta property="article:tag" content="Apm">
+    <meta property="article:tag" content="Firewall">
+
+
+
+
+<link rel="canonical" href="//localhost:1313/posts/digitalocean-app-platform-x-datadog/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="//localhost:1313/">
+      Fabian Clemenz
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="//localhost:1313/posts/digitalocean-app-platform-x-datadog/">
+              DigitalOcean App Platform X Datadog
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-11-19T08:55:34&#43;01:00">
+                November 19, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              4-minute read
+            </span>
+          </div>
+          <div class="authors">
+  <i class="fa-solid fa-user" aria-hidden="true"></i>
+    <a href="/authors/fabian-clemenz/">Fabian Clemenz</a></div>
+
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/infrastructure/">Infrastructure</a>
+      <span class="separator">•</span>
+    <a href="/categories/monitoring/">Monitoring</a></div>
+
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/digitalocean/">Digitalocean</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/datadog/">Datadog</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/monitoring/">Monitoring</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/server/">Server</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/apm/">Apm</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/firewall/">Firewall</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>This article was first published on our company website. <a href="https://devsuit.de/ueber-uns/aktuelles/digitalocean-app-platform-x-datadog"  class="external-link" target="_blank" rel="noopener">https://devsuit.de/ueber-uns/aktuelles/digitalocean-app-platform-x-datadog</a></p>
+<p>In this article I will show how to connect services inside the DigitalOcean App Platform with Datadog. By the time of writing (<strong>07.11.2025</strong>) there is no direct integration except for logging. But as soon as you need APM or Error Tracking, you have no choice but to build your own solution.</p>
+<h2 id="prerequisites">
+  Prerequisites
+  <a class="heading-link" href="#prerequisites">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>The following components are needed:</p>
+<ul>
+<li>DigitalOcean VPC</li>
+<li>DigitalOcean Firewall</li>
+<li>DigitalOcean Droplet</li>
+</ul>
+<p>On the droplet, the Datadog Agent is run as a docker container. It receives traces and other application data and sends them to Datadog. Since the Datadog Agent&rsquo;s port on the server has been opened, access must be secured so that only the intended apps can use the agent. This is done by creating a VPC and then allowing access to port <strong>8126</strong> (the Datadog Agent port) through a firewall only from this VPC. All apps use the same VPC and can therefore communicate with the agent.</p>
+<h2 id="virtual-private-cloudvpc">
+  Virtual Private Cloud (VPC)
+  <a class="heading-link" href="#virtual-private-cloudvpc">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>A VPC is a private, isolated network that you create within the DigitalOcean infrastructure. It allows you to run resources (such as Droplets, databases, etc.) in a virtual network segment that is separated from others - similar to how it works in AWS or GCP.</p>
+<h3 id="create-thevpc">
+  Create the VPC
+  <a class="heading-link" href="#create-thevpc">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Go to <strong>Networking → VPC</strong> and click <strong>Create VPC Network</strong>. In the next window, select the appropriate datacenter region, let DigitalOcean generate the IP range (default setting), and give the VPC a name and description.</p>
+<p>The first VPC you create automatically becomes the default VPC. Every newly created component will be assigned to this VPC by default.</p>
+<h2 id="server-installation">
+  Server Installation
+  <a class="heading-link" href="#server-installation">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>After the basic server configuration (see my article <a href="https://fabianclemenz.github.io/posts/basic-server-security"  class="external-link" target="_blank" rel="noopener">Basic Server Security</a>), the Datadog Agent port also needs to be opened. This is done with the command <code>sudo ufw allow 8126</code>. Since the Datadog Agent will be run as a Docker container, Docker must be installed on the server. Docker provides a good guide for this: <a href="https://docs.docker.com/engine/install/ubuntu/"  class="external-link" target="_blank" rel="noopener">https://docs.docker.com/engine/install/ubuntu/</a>.</p>
+<p>After installation, create a folder inside the <code>/opt</code> directory so that any user can configure the agent, using the command: <code>sudo mkdir /opt/datadog-agent</code>.</p>
+<p>I like to use Docker Compose to configure and run containers. The following file can be used for this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#7ee787">services</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">dd-agent</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">image</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">datadog/agent:latest</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">container_name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">datadog-agent</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">ports</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span>- <span style="color:#a5d6ff">8126</span>:<span style="color:#a5d6ff">8126</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">restart</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">always</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">environment</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span><span style="color:#7ee787">DD_SITE</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#34;&lt;datadog-site&gt;&#34;</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span><span style="color:#7ee787">DD_API_KEY</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#34;&lt;your-api-key&gt;&#34;</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span><span style="color:#7ee787">DD_APM_ENABLED</span>:<span style="color:#6e7681"> </span><span style="color:#79c0ff">true</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span><span style="color:#7ee787">DD_LOGS_ENABLED</span>:<span style="color:#6e7681"> </span><span style="color:#79c0ff">true</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span><span style="color:#7ee787">DD_CONTAINER_EXCLUDE_LOGS</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#34;name:datadog-agent&#34;</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span><span style="color:#7ee787">DD_APM_NON_LOCAL_TRAFFIC</span>:<span style="color:#6e7681"> </span><span style="color:#79c0ff">true</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">volumes</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span>- <span style="color:#a5d6ff">/var/run/docker.sock:/var/run/docker.sock:ro</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span>- <span style="color:#a5d6ff">/proc/:/host/proc/:ro</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">      </span>- <span style="color:#a5d6ff">/sys/fs/cgroup/:/host/sys/fs/cgroup:ro</span><span style="color:#6e7681">
+</span></span></span></code></pre></div><p>Additional settings can be configured based on the Datadog documentation. The important line is <strong>DD_APM_NON_LOCAL_TRAFFIC</strong>, which allows traces from external sources outside the server.</p>
+<p>The Datadog Agent is started with <code>sudo docker compose up -d</code>.</p>
+<h2 id="firewall">
+  Firewall
+  <a class="heading-link" href="#firewall">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>With the firewall in DigitalOcean, incoming and outgoing traffic can be controlled. The firewall can be assigned to multiple components, which then share the same network rules. The firewall operates at the network level within the DigitalOcean infrastructure.</p>
+<h3 id="create-thefirewall">
+  Create the Firewall
+  <a class="heading-link" href="#create-thefirewall">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Go to <strong>Networking → Firewall</strong> and click <strong>Create Firewall</strong>. In the next window, give the firewall a descriptive name. By default, the inbound rules only allow the SSH port from all IPv4 and IPv6 addresses. This setting must be changed so the server remains accessible via SSH. To do this, set the type to <strong>Custom</strong> and enter the desired SSH port (see <a href="#server-installation" >server installation</a>) as the port.</p>
+<p>Next, create a new rule. Set the type to Custom, set the port to <strong>8126</strong> (the Datadog Agent port), and then enter the VPC&rsquo;s IP range (e.g., <code>10.114.0.0/20</code>) as the source.</p>
+<p>After that, you can select the previously created Droplet under <strong>Apply to Droplets</strong>.</p>
+<h2 id="configure-the-application">
+  Configure the Application
+  <a class="heading-link" href="#configure-the-application">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>For the application to send traces to the newly created Datadog Agent, the private IP address of the server (e.g., <code>10.114.0.2</code>) must be set as the <strong>DD_AGENT_HOST</strong>. This ensures that the library (e.g., <strong>ddtrace</strong>) sends the data not to localhost but to the Datadog Agent running on the server.</p>
+<p>In addition, the app must be added to the created VPC. This can be done within the app under <strong>Settings → Region</strong>.</p>
+<h2 id="conclusion">
+  Conclusion
+  <a class="heading-link" href="#conclusion">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Due to the limitations of the DigitalOcean App Platform, which prevents the native use of the Datadog Agent, and the lack of direct Datadog integration in DigitalOcean, the approach shown here is the only way to monitor applications within the DigitalOcean App Platform using Datadog.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2023 -
+    
+    2025
+     Fabian Clemenz 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+</html>

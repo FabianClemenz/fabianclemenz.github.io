@@ -1,10 +1,11 @@
 baseURL = "/"
 title = "Fabian Clemenz"
-theme = "hugo-coder"
+theme = "coder"
 languagecode = "en"
 defaultcontentlanguage = "en"
 
-paginate = 20
+[pagination]
+  pagerSize = 10
 
 [markup.highlight]
 style = "github-dark"
@@ -23,7 +24,6 @@ style = "github-dark"
 
   colorScheme = "auto"
   hidecolorschemetoggle = false
-  commit = "https://github.com/luizdepra/hugo-coder/tree/main"
 
 [taxonomies]
   category = "categories"

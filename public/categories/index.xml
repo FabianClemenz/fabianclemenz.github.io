@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Fabian Clemenz</title>
+    <link>//localhost:1313/categories/</link>
+    <description>Recent content in Categories on Fabian Clemenz</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 20 Nov 2025 08:55:34 +0100</lastBuildDate>
+    <atom:link href="//localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>101</title>
+      <link>//localhost:1313/categories/101/</link>
+      <pubDate>Thu, 20 Nov 2025 08:55:34 +0100</pubDate>
+      <guid>//localhost:1313/categories/101/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Infrastructure</title>
+      <link>//localhost:1313/categories/infrastructure/</link>
+      <pubDate>Thu, 20 Nov 2025 08:55:34 +0100</pubDate>
+      <guid>//localhost:1313/categories/infrastructure/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Security</title>
+      <link>//localhost:1313/categories/security/</link>
+      <pubDate>Thu, 20 Nov 2025 08:55:34 +0100</pubDate>
+      <guid>//localhost:1313/categories/security/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Monitoring</title>
+      <link>//localhost:1313/categories/monitoring/</link>
+      <pubDate>Wed, 19 Nov 2025 08:55:34 +0100</pubDate>
+      <guid>//localhost:1313/categories/monitoring/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Programming</title>
+      <link>//localhost:1313/categories/programming/</link>
+      <pubDate>Thu, 09 Mar 2023 13:31:46 +0100</pubDate>
+      <guid>//localhost:1313/categories/programming/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

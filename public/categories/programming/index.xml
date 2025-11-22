@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Programming on Fabian Clemenz</title>
+    <link>//localhost:1313/categories/programming/</link>
+    <description>Recent content in Programming on Fabian Clemenz</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 09 Mar 2023 13:31:46 +0100</lastBuildDate>
+    <atom:link href="//localhost:1313/categories/programming/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Django 101: Switching the primary key on existing models</title>
+      <link>//localhost:1313/posts/django-101-switching-primary-key-on-existing-models/</link>
+      <pubDate>Thu, 09 Mar 2023 13:31:46 +0100</pubDate>
+      <guid>//localhost:1313/posts/django-101-switching-primary-key-on-existing-models/</guid>
+      <description>&lt;h4 id=&#34;or-living-on-the-edge-of-data-loss&#34;&gt;&#xA;  &lt;em&gt;or: living on the edge of data loss&lt;/em&gt;&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#or-living-on-the-edge-of-data-loss&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h4&gt;&#xA;&lt;p&gt;A while ago, we got the task to switch from a 22 long char field to our internal uuid as primary key. The 22-character long id was the primary key from our source system. The idea was to decouple both systems, so we can create virtual entries, without providing a random char, which could have led to errors in the future. Our database table contained over 3.4 million entries at this time. Linked to round about 16 other tables in foreign key and many to many relations.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
